@@ -54,7 +54,7 @@ func (handler *VerifyHandler) Send() http.HandlerFunc {
 		}
 
 		hash := hash.EncodeEmail(body.Email)
-		link := fmt.Sprintf("%s%s:%s/%s", configs.PROTOCOL, configs.DOMAIN, configs.PORT, hash)
+		link := fmt.Sprintf("%s%s:%s/%s", handler.Config.Protocol, handler.Config.Domain, handler.Config.Port, hash)
 		err = email.Send(email.SendParams{
 			UserEmail:      body.Email,
 			Link:           link,
@@ -63,6 +63,7 @@ func (handler *VerifyHandler) Send() http.HandlerFunc {
 			ResponseWriter: &w,
 		})
 		if err != nil {
+			res.Json(w, 500, "Error sending email")
 			return
 		}
 
