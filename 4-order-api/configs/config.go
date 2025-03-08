@@ -1,8 +1,8 @@
 package configs
 
 import (
+	"go-adv/4-order-api/pkg/env"
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -20,7 +20,8 @@ func LoadConfig() *Config {
 	if err != nil {
 		log.Println("Error loading .env file, using default config")
 	}
+
 	return &Config{
-		Db: DbConfig{Dsn: os.Getenv("DSN")},
+		Db: DbConfig{Dsn: env.Getenv("DSN", "")},
 	}
 }

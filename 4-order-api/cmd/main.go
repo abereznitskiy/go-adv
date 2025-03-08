@@ -6,12 +6,16 @@ import (
 	"go-adv/4-order-api/internal/product"
 	"go-adv/4-order-api/pkg/customValidate"
 	"go-adv/4-order-api/pkg/db"
+	"go-adv/4-order-api/pkg/middleware"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+	log.SetFormatter(&log.JSONFormatter{})
+
 	conf := configs.LoadConfig()
 	db := db.NewDb(conf)
 	router := http.NewServeMux()
@@ -20,9 +24,10 @@ func main() {
 	validate := validator.New()
 	validate.RegisterValidation("string_array", customValidate.StringArrayValidation)
 
+	stack := middleware.Chain(middleware.Log)
 	server := http.Server{
 		Addr:    ":8081",
-		Handler: router,
+		Handler: stack(router),
 	}
 	fmt.Println("Server is listening 8081")
 	server.ListenAndServe()
