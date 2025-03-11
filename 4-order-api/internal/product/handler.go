@@ -63,6 +63,7 @@ func (handler *ProductHandler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := req.HandleBody[ProductCreateRequest](&w, r)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		product, err := handler.ProductRepository.Create(
@@ -84,6 +85,7 @@ func (handler *ProductHandler) Update() http.HandlerFunc {
 		pathId := r.PathValue("id")
 		body, err := req.HandleBody[ProductUpdateRequest](&w, r)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

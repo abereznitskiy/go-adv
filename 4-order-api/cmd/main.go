@@ -17,7 +17,10 @@ func main() {
 	log.SetFormatter(&log.JSONFormatter{})
 
 	conf := configs.LoadConfig()
-	db := db.NewDb(conf)
+	db, err := db.NewDb(conf)
+	if err != nil {
+		fmt.Printf("Database error: %s", err)
+	}
 	router := http.NewServeMux()
 	productRepository := product.NewProductRepository(db)
 	product.NewProductHandler(router, product.ProductHandlerDeps{ProductRepository: productRepository})
