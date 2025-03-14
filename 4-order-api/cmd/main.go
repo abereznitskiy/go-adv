@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"go-adv/4-order-api/configs"
+	"go-adv/4-order-api/internal/auth"
 	"go-adv/4-order-api/internal/product"
+	"go-adv/4-order-api/internal/user"
 	"go-adv/4-order-api/pkg/customValidate"
 	"go-adv/4-order-api/pkg/db"
 	"go-adv/4-order-api/pkg/middleware"
@@ -23,7 +25,10 @@ func main() {
 	}
 	router := http.NewServeMux()
 	productRepository := product.NewProductRepository(db)
+	userRepository := user.NewUserRepository(db)
+	authService := auth.NewAuthService(userRepository, conf)
 	product.NewProductHandler(router, product.ProductHandlerDeps{ProductRepository: productRepository})
+	auth.NewAuthHandler(router, auth.AuthHandlerDeps{AuthService: authService})
 	validate := validator.New()
 	validate.RegisterValidation("string_array", customValidate.StringArrayValidation)
 
