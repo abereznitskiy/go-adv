@@ -27,7 +27,10 @@ func main() {
 	productRepository := product.NewProductRepository(db)
 	userRepository := user.NewUserRepository(db)
 	authService := auth.NewAuthService(userRepository, conf)
-	product.NewProductHandler(router, product.ProductHandlerDeps{ProductRepository: productRepository})
+	product.NewProductHandler(router, product.ProductHandlerDeps{
+		ProductRepository: productRepository,
+		Config:            conf,
+	})
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{AuthService: authService})
 	validate := validator.New()
 	validate.RegisterValidation("string_array", customValidate.StringArrayValidation)

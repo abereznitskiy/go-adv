@@ -66,7 +66,11 @@ func (service *AuthService) Verify(sessionId, code string) (string, error) {
 	}
 
 	if code == existedUser.Code {
-		token, err := jwt.NewJWT(service.Config.Db.Secret).Create(sessionId, code)
+		token, err := jwt.NewJWT(service.Config.Db.Secret).Create(jwt.JWTData{
+			PhoneNumber: existedUser.PhoneNumber,
+			SessionId:   existedUser.SessionId,
+			Code:        existedUser.Code,
+		})
 		if err != nil {
 			return "", err
 		}
