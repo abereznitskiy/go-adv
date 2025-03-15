@@ -12,7 +12,8 @@ type Config struct {
 }
 
 type DbConfig struct {
-	Dsn string
+	Dsn    string
+	Secret string
 }
 
 func LoadConfig() *Config {
@@ -22,6 +23,9 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		Db: DbConfig{Dsn: env.Getenv("DSN", "")},
+		Db: DbConfig{
+			Dsn:    env.Getenv("DSN", ""),
+			Secret: env.Getenv("SECRET", ""),
+		},
 	}
 }
