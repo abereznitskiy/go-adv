@@ -77,5 +77,5 @@ func (service *AuthService) Verify(sessionId, code string) (string, error) {
 		return token, nil
 	}
 
-	return "", err
+	return "", nil
 }

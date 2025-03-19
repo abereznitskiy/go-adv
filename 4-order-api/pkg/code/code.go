@@ -8,5 +8,5 @@ import (
 const CODE_LENGHT = 10000
 
 func GenerateCode() string {
-	return fmt.Sprintf("%04d", rand.Intn(10000))
+	return fmt.Sprintf("%04d", rand.Intn(CODE_LENGHT))
 }
