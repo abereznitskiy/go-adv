@@ -12,10 +12,15 @@ import (
 type key string
 
 const (
-	CONTEXT_PHONE_NUMBER_KEY key    = "ContextPhoneNumberKey"
-	AUTHORIZATION_KEY        string = "Authorization"
-	BEARER_PREFIX            string = "Bearer "
+	CONTEXT_AUTH_DATA_KEY key    = "ContextAuthDataKey"
+	AUTHORIZATION_KEY     string = "Authorization"
+	BEARER_PREFIX         string = "Bearer "
 )
+
+type AuthContext struct {
+	PhoneNumber string
+	UserId      string
+}
 
 func IsAuth(next http.Handler, config *configs.Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +37,10 @@ func IsAuth(next http.Handler, config *configs.Config) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), CONTEXT_PHONE_NUMBER_KEY, data.PhoneNumber)
+		ctx := context.WithValue(r.Context(), CONTEXT_AUTH_DATA_KEY, &AuthContext{
+			PhoneNumber: data.PhoneNumber,
+			UserId:      data.Id,
+		})
 		req := r.WithContext(ctx)
 
 		next.ServeHTTP(w, req)
