@@ -1,8 +1,7 @@
 package main
 
 import (
-	"go-adv/4-order-api/internal/product"
-	"go-adv/4-order-api/internal/user"
+	"go-adv/4-order-api/pkg/models"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -20,5 +19,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&product.Product{}, &user.User{})
+	db.AutoMigrate(&models.Product{}, &models.User{}, &models.Order{})
 }

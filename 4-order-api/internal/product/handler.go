@@ -1,9 +1,9 @@
 package product
 
 import (
-	"fmt"
 	"go-adv/4-order-api/configs"
 	"go-adv/4-order-api/pkg/middleware"
+	"go-adv/4-order-api/pkg/models"
 	"go-adv/4-order-api/pkg/req"
 	"go-adv/4-order-api/pkg/res"
 	"net/http"
@@ -72,7 +72,7 @@ func (handler *ProductHandler) Create() http.HandlerFunc {
 			return
 		}
 		product, err := handler.ProductRepository.Create(
-			&Product{
+			&models.Product{
 				Name:        body.Name,
 				Description: body.Description,
 				Images:      body.Images})
@@ -87,11 +87,6 @@ func (handler *ProductHandler) Create() http.HandlerFunc {
 
 func (handler *ProductHandler) Update() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		phoneNumber, ok := r.Context().Value(middleware.CONTEXT_PHONE_NUMBER_KEY).(string)
-		if ok {
-			fmt.Println(phoneNumber)
-		}
-
 		pathId := r.PathValue("id")
 		body, err := req.HandleBody[ProductUpdateRequest](&w, r)
 		if err != nil {
@@ -105,7 +100,7 @@ func (handler *ProductHandler) Update() http.HandlerFunc {
 			return
 		}
 
-		updatedProduct, err := handler.ProductRepository.Update(&Product{
+		updatedProduct, err := handler.ProductRepository.Update(&models.Product{
 			Model:       gorm.Model{ID: uint(id)},
 			Name:        body.Name,
 			Description: body.Description,

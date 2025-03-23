@@ -1,6 +1,8 @@
 package jwt
 
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type JWT struct {
 	Secret string
@@ -10,6 +12,7 @@ type JWTData struct {
 	PhoneNumber string
 	SessionId   string
 	Code        string
+	Id          string
 }
 
 func NewJWT(secret string) *JWT {
@@ -21,6 +24,7 @@ func (j *JWT) Create(data JWTData) (string, error) {
 		"phoneNumber": data.PhoneNumber,
 		"sessionId":   data.SessionId,
 		"code":        data.Code,
+		"id":          data.Id,
 	})
 
 	s, err := t.SignedString([]byte(j.Secret))
@@ -40,7 +44,10 @@ func (j *JWT) Parse(token string) (bool, *JWTData) {
 	}
 
 	phoneNumber := t.Claims.(jwt.MapClaims)["phoneNumber"]
+	id := t.Claims.(jwt.MapClaims)["id"]
+
 	return t.Valid, &JWTData{
 		PhoneNumber: phoneNumber.(string),
+		Id:          id.(string),
 	}
 }
