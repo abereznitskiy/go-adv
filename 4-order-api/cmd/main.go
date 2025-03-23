@@ -16,7 +16,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func main() {
+func App() http.Handler {
 	log.SetFormatter(&log.JSONFormatter{})
 
 	conf := configs.LoadConfig()
@@ -42,9 +42,15 @@ func main() {
 	validate.RegisterValidation("string_array", customValidate.StringArrayValidation)
 
 	stack := middleware.Chain(middleware.Log)
+
+	return stack(router)
+}
+
+func main() {
+	app := App()
 	server := http.Server{
 		Addr:    ":8081",
-		Handler: stack(router),
+		Handler: app,
 	}
 	fmt.Println("Server is listening 8081")
 	server.ListenAndServe()

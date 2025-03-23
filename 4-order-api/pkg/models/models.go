@@ -10,13 +10,13 @@ type User struct {
 	PhoneNumber string
 	SessionId   string
 	Code        string
-	Orders      []*Order `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Orders      []*Order `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type Order struct {
 	gorm.Model
 	UserID   uint       `json:"user_id"`
-	Products []*Product `gorm:"many2many:order_products;"`
+	Products []*Product `gorm:"many2many:order_products;constraint:OnDelete:CASCADE;"`
 }
 
 type Product struct {
